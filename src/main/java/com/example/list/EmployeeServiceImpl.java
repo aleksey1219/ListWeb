@@ -15,28 +15,28 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employees = new ArrayList<>();
 
     }
-
-    public void addEmployee(String firstName, String lastName) {
-        if (employees.size() >= MAX_EMPLOYEES) {
-            throw new EmployeeStorageIsFullException("Достигнуто максимальное количество сотрудников");
-        }
-
+@Override
+    public Employee addEmployee(String firstName, String lastName) {
         Employee newEmployee = new Employee(firstName, lastName);
+    if (employees.size() >= MAX_EMPLOYEES) {
 
-        for (Employee employee : employees) {
-            if (employee.equals(newEmployee)) {
-                throw new EmployeeAlreadyAddedException("Сотрудник уже существует");
-            }
+             throw new EmployeeStorageIsFullException("Достигнуто максимальное количество сотрудников");
+    }
+        if (employees.contains(newEmployee)) {
+            throw new EmployeeAlreadyAddedException("Сотрудник уже существует");
         }
-
         employees.add(newEmployee);
+        return newEmployee;
     }
 
+
+
+    @Override
     public void removeEmployee(String firstName, String lastName) {
         Employee employeeToRemove = findEmployee(firstName, lastName);
         employees.remove(employeeToRemove);
     }
-
+    @Override
     public Employee findEmployee(String firstName, String lastName) {
         for (Employee employee : employees) {
             if (employee.getFirstName().equals(firstName) && employee.getLastName().equals(lastName)) {
@@ -45,7 +45,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         throw new EmployeeNotFoundException("Сотрудник не найден");
     }
-
+    @Override
     public List<Employee> getAllEmployees() {
         return employees;
     }
